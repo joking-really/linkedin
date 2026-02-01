@@ -260,25 +260,7 @@
                 <p class="subtitle">Enter details to trigger your n8n workflow</p>
             </div>
 
-            <div class="config-info">
-                <strong><i class="fas fa-info-circle"></i> Setup Instructions:</strong>
-                <ol style="margin: 10px 0 0 20px;">
-                    <li>Copy the <strong>"Test URL"</strong> from your n8n Webhook node</li>
-                    <li>Paste it below in the Webhook URL field</li>
-                    <li>Save and test the form</li>
-                </ol>
-            </div>
 
-            <div class="form-group" style="margin-top: 20px;">
-                <label for="webhookUrl">
-                    <i class="fas fa-link"></i> n8n Webhook URL
-                </label>
-                <input type="url" id="webhookUrl"
-                    placeholder="https://muneebtest.app.n8n.cloud/webhook/6e67651b-2e38-46bb-9d36-4904adb76254">
-                <div class="char-count">
-                    <span id="urlChars">0</span> characters
-                </div>
-            </div>
 
             <form id="contentForm">
                 <div class="form-group">
@@ -323,31 +305,19 @@
     </div>
 
     <script>
+        // Hardcoded webhook URL
+        const n8nWebhookUrl = 'https://muneebtest.app.n8n.cloud/webhook/6e67651b-2e38-46bb-9d36-4904adb76254';
+
         // DOM Elements
         const contentForm = document.getElementById('contentForm');
-        const webhookUrlInput = document.getElementById('webhookUrl');
         const postTopic = document.getElementById('postTopic');
         const targetAudience = document.getElementById('targetAudience');
         const submitBtn = document.getElementById('submitBtn');
         const resultMessage = document.getElementById('resultMessage');
         const topicChars = document.getElementById('topicChars');
         const audienceChars = document.getElementById('audienceChars');
-        const urlChars = document.getElementById('urlChars');
-
-        // Load saved webhook URL from localStorage
-        const savedUrl = localStorage.getItem('n8nWebhookUrl');
-        if (savedUrl) {
-            webhookUrlInput.value = savedUrl;
-            urlChars.textContent = savedUrl.length;
-        }
 
         // Character counters
-        webhookUrlInput.addEventListener('input', function () {
-            urlChars.textContent = this.value.length;
-            // Save to localStorage
-            localStorage.setItem('n8nWebhookUrl', this.value);
-        });
-
         postTopic.addEventListener('input', function () {
             topicChars.textContent = this.value.length;
         });
@@ -359,16 +329,6 @@
         // Form submission handler
         contentForm.addEventListener('submit', async function (e) {
             e.preventDefault();
-
-            // Get the webhook URL
-            const n8nWebhookUrl = webhookUrlInput.value.trim();
-
-            // Validate webhook URL
-            if (!n8nWebhookUrl) {
-                showResult('Please enter your n8n webhook URL first.', 'error');
-                webhookUrlInput.focus();
-                return;
-            }
 
             // Validate inputs
             if (!postTopic.value.trim() || !targetAudience.value.trim()) {
@@ -495,12 +455,6 @@
 
         // Test connection function
         async function testConnection() {
-            const n8nWebhookUrl = webhookUrlInput.value.trim();
-
-            if (!n8nWebhookUrl) {
-                showResult('Please enter a webhook URL first.', 'error');
-                return;
-            }
 
             showResult('<i class="fas fa-spinner fa-spin"></i> Testing connection...', 'error');
 
